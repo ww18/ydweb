@@ -15,7 +15,7 @@ const {resolve, join, basename} = require('path');
 let _entry = {};
 
 for(let item of files){
-    if(/.+\/([a-zA-Z])+(\.entry\.js)$/g.test(item)){
+    if(/.+\/([a-zA-Z]+)(\.entry\.js$)/g.test(item)){
         const entrykey = RegExp.$1;
         console.log(entrykey);
         _entry[entrykey] = item;
