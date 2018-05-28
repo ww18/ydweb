@@ -1,13 +1,36 @@
 import Koa from 'koa';
 import router  from 'koa-simple-router';
 import controllerInit from './controllers/controllerInit.js';
-import configure from './config';
-
+import config from './config';
+import log4js from 'log4js';
+import errorHandler from './middwares/errorHandler.js';
+import serve from 'koa-static';
+import render from 'koa-swig';
+import co from 'co';
 const app = new Koa();
-controllerInit.getAllrouters(app, router);
 
-app.listen(configure.port,()=>{
-	console.log(`ydweb listening on ${configure.port}`)
+log4js.configure({
+	appenders: { cheese: { type: 'file', filename: './dist/logs/yd.log'} },
+	categories: { default: { appenders: ['cheese'], level: 'error' } }
+});
+const logger = log4js.getLogger('cheese');
+//错误处理中心
+errorHandler.error(app, logger);
+//集中处理所有的路由
+controllerInit.getAllrouters(app, router);
+//静态资源管理
+app.use(serve(config.staticDir));
+
+app.context.render = co.wrap(render({
+	root: config.viewDir,
+	autoescape: true,
+	cache: 'memory', // disable, set to false
+	varControls: ["[[","]]"],
+	ext: 'html'
+}));
+
+app.listen(config.port,()=>{
+	console.log(`ydweb listening on ${config.port}`)
 });
 
 
