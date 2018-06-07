@@ -15,7 +15,7 @@ var _path2 = _interopRequireDefault(_path);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 let config = {
-	"viewDir": _path2.default.join(__dirname, '..', 'views'),
+	"viewDir": _path2.default.join(__dirname, '..', 'views/index/'),
 	"staticDir": _path2.default.join(__dirname, '..', 'assets'),
 	'env': process.env.NODE_ENV
 	//todo 增加了无用的代码，导致当前的逻辑过长，导致代码量大，hot-reload，对代码进行清洗

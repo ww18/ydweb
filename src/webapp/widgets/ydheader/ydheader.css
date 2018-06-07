@@ -1,4 +1,16 @@
-.header{
-    height: 100px;
-    background: #000;
+:root{
+    --headerHeight: 70px;
+}
+.widgets-ydheader{
+    & .h-70{
+        height: var(--headerHeight);
+    }
+    & .header-content{
+        line-height: var(--headerHeight);
+        color: #000;
+        box-shadow: 0 0 10px #000;
+    }
+    & .header-content__logo{
+        float: left;
+    }
 }
