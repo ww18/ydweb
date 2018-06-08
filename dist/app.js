@@ -43,7 +43,7 @@ app.use((0, _awilixKoa.scopePerRequest)(container));
 container.loadModules([__dirname + '/models/*.js'], {
 	formatName: 'camelCase',
 	resolverOptions: {
-		lifetime: 200
+		lifetime: _awilix.Lifetime.SCOPED
 	}
 });
 

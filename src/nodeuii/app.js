@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import { createContainer, asClass, asValue} from 'awilix';
+import { createContainer,Lifetime, asClass, asValue} from 'awilix';
 import { loadControllers, scopePerRequest } from 'awilix-koa';
 import config from './config';
 import log4js from 'log4js';
@@ -16,7 +16,7 @@ app.use(scopePerRequest(container));
 container.loadModules([__dirname + '/models/*.js'],{
 	formatName: 'camelCase',
 	resolverOptions:{
-		lifetime: 200
+		lifetime: Lifetime.SCOPED
 	}
 })
 
