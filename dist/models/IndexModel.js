@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", {
  * IndexModel类，生成一段异步的数据
  * @class
  */
-class IndexModel {
+let IndexModel = class IndexModel {
 	/**
  * @contractor
  * @param {string} app koa2上下文
@@ -33,5 +33,5 @@ class IndexModel {
 		});
 	}
 
-}
+};
 exports.default = IndexModel;

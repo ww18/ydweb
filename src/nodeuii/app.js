@@ -1,6 +1,6 @@
 import Koa from 'koa';
-import router  from 'koa-simple-router';
-import controllerInit from './controllers/controllerInit.js';
+import { createContainer, asClass, asValue} from 'awilix';
+import { loadControllers, scopePerRequest } from 'awilix-koa';
 import config from './config';
 import log4js from 'log4js';
 import errorHandler from './middwares/errorHandler.js';
@@ -8,6 +8,17 @@ import serve from 'koa-static';
 import render from 'koa-swig';
 import co from 'co';
 const app = new Koa();
+//ioc的控制反转的容器
+const container = createContainer();
+//每次请求new
+app.use(scopePerRequest(container));
+//装载所有的models到controller，完成利用切面注入
+container.loadModules([__dirname + '/models/*.js'],{
+	formatName: 'camelCase',
+	resolverOptions:{
+		lifetime: 200
+	}
+})
 
 log4js.configure({
 	appenders: { cheese: { type: 'file', filename: './dist/logs/yd.log'} },
@@ -17,7 +28,8 @@ const logger = log4js.getLogger('cheese');
 //错误处理中心
 errorHandler.error(app, logger);
 //集中处理所有的路由
-controllerInit.getAllrouters(app, router);
+app.use(loadControllers(__dirname + '/controllers/*.js',{ cwd: __dirname}));
+//controllerInit.getAllrouters(app, router);
 //静态资源管理
 app.use(serve(config.staticDir));
 

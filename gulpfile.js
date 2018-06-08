@@ -9,7 +9,7 @@ gulp.task('builddev', ()=>{
 	return watch('./src/nodeuii/**/*.js', {ignoreInitial: false},()=>{
 		gulp.src('./src/nodeuii/**/*.js').pipe(babel({
 			babelrc: false,
-			'plugins': ['transform-es2015-modules-commonjs']
+			'plugins': ["transform-decorators-legacy",'transform-es2015-modules-commonjs']
 		}))
 		.pipe(gulp.dest('dist'))
 	})
@@ -19,7 +19,7 @@ gulp.task('buildpro',()=>{
 	gulp.src('./src/nodeuii/**/*.js').pipe(babel({
 		babelrc: false,
 		ignore: ['./src/nodeuii/config/*.js'],
-		'plugins': ['transform-es2015-modules-commonjs']
+		'plugins': ["transform-decorators-legacy",'transform-es2015-modules-commonjs']
 	}))
 	.pipe(gulp.dest('dist'))
 });

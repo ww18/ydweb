@@ -4,13 +4,9 @@ var _koa = require('koa');
 
 var _koa2 = _interopRequireDefault(_koa);
 
-var _koaSimpleRouter = require('koa-simple-router');
+var _awilix = require('awilix');
 
-var _koaSimpleRouter2 = _interopRequireDefault(_koaSimpleRouter);
-
-var _controllerInit = require('./controllers/controllerInit.js');
-
-var _controllerInit2 = _interopRequireDefault(_controllerInit);
+var _awilixKoa = require('awilix-koa');
 
 var _config = require('./config');
 
@@ -39,6 +35,17 @@ var _co2 = _interopRequireDefault(_co);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const app = new _koa2.default();
+//ioc的控制反转的容器
+const container = (0, _awilix.createContainer)();
+//每次请求new
+app.use((0, _awilixKoa.scopePerRequest)(container));
+//装载所有的models到controller，完成利用切面注入
+container.loadModules([__dirname + '/models/*.js'], {
+	formatName: 'camelCase',
+	resolverOptions: {
+		lifetime: 200
+	}
+});
 
 _log4js2.default.configure({
 	appenders: { cheese: { type: 'file', filename: './dist/logs/yd.log' } },
@@ -48,7 +55,8 @@ const logger = _log4js2.default.getLogger('cheese');
 //错误处理中心
 _errorHandler2.default.error(app, logger);
 //集中处理所有的路由
-_controllerInit2.default.getAllrouters(app, _koaSimpleRouter2.default);
+app.use((0, _awilixKoa.loadControllers)(__dirname + '/controllers/*.js', { cwd: __dirname }));
+//controllerInit.getAllrouters(app, router);
 //静态资源管理
 app.use((0, _koaStatic2.default)(_config2.default.staticDir));
 

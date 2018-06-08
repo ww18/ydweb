@@ -12,7 +12,7 @@ const errorHandle = {
             try {
                 await next();
             } catch (error) {
-                logger.error('12321421');
+                logger.error(error);
                 ctx.status = 404;
             }
         });

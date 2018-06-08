@@ -6,6 +6,8 @@ const marge = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const htmlAfterWebpackPlugin = require('./config/htmlAfterWebpackPlugin.js');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const minify = require('html-minifier').minify;
 const glob = require('glob');
 const files = glob.sync('./src/webapp/views/**/*.entry.js');
 const _mode = argv.mode || "development";
@@ -43,6 +45,36 @@ let webpackConfig = {
         publicPath: '/',
         filename: 'scripts/[name].bundle.js'
     },
+    optimization: {
+        nodeEnv: _mode,
+        runtimeChunk: {
+            name: 'manifest'
+        },
+        //minimizer: false, // [new UglifyJsPlugin({...})]
+        splitChunks: {
+            chunks: 'async',
+            minSize: 30000,
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            name: false,
+            cacheGroups: {
+                vendor: {
+                    name: 'vendor',
+                    chunks: 'initial',
+                    priority: -10,
+                    reuseExistingChunk: true,
+                    test: /node_modules\/(.*).js/
+                }
+            }
+        }
+    },
+    watch: !_modeflag,
+    watchOptions: {
+        ignored: /node_modules/,
+        aggregateTimeout: 300,
+        poll: 1
+    },
     module: {
         rules: [
             {
@@ -51,7 +83,16 @@ let webpackConfig = {
             },
             {
                 test: /.css$/,
-                use: ["style-loader", "css-loader", "postcss-loader"]
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: [{
+                        loader: 'css-loader?minimize',
+                        options: {
+                            importLoaders: 1,
+                            minimize: _modeflag  //是否开启压缩
+                        }
+                    },"postcss-loader"]
+                })
             }
         ]
     },
@@ -60,17 +101,27 @@ let webpackConfig = {
         new htmlAfterWebpackPlugin(),
         new CopyWebpackPlugin(
             [{ from: join(__dirname,'/src/webapp/views/common/layout.html'),
-               to: '../views/common/layout.html'}],
+               to: '../views/common/layout.html'
+            }],
             { copyUnmodified: true }
         ),
         new CopyWebpackPlugin(
             [{ from: join(__dirname,'/src/webapp/widgets/'),
-                to: '../widgets'}],
+                to: '../widgets',
+                transform(content, path){
+                    return minify(content.toString("utf-8"),{
+                        collapseWhitespace: true
+                    })
+                }
+            }],
             {
                 copyUnmodified: true,
                 ignore: ["*.js","*.css"]
             }
-        )
+        ),
+        new ExtractTextPlugin({
+            filename: 'styles/[name].bundle.css?v=[hash]'
+        })
     ]
 
 }

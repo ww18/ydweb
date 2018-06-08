@@ -1,12 +1,12 @@
-{% extends '../common/layout.html' %}
+{% extends '../../common/layout.html' %}
 {% block title %} 首页 {% endblock %}
 {% block head %}
-
+<link rel="stylesheet" href="/styles/index-index.bundle.css?v=8ab7d958250ec6bff8b1">
 {% endblock  %}
 {% block content %}
-    {% include "../../widgets/ydheader/ydheader.html"%}
+    {% include "../../../widgets/ydheader/ydheader.html"%}
 {% endblock %}
 
 {% block scripts %}
-<script src="/scripts/index-index.bundle.js"></script>
+<script src="/scripts/manifest.bundle.js"></script><script src="/scripts/index-index.bundle.js"></script>
 {% endblock  %}
