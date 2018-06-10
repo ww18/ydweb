@@ -1,3 +1,22 @@
+.widgets-ydheader .h-70{
+    height: 70px;
+}
+.widgets-ydheader .header-content{
+    line-height: 70px;
+    color: #000;
+    -webkit-box-shadow: 0 0 10px #000;
+            box-shadow: 0 0 10px #000;
+    overflow: hidden;
+}
+.widgets-ydheader .header-content__logo{
+    float: left;
+}
+.widgets-ydheader .header-content__nav{
+    float: right;
+}
+.widgets-ydheader .header-content__nav li{
+    float:left;
+}
 @charset "UTF-8";
 /**
 * @file:      Neat.css
@@ -605,23 +624,4 @@ audio:not([controls]) {
 */
 [draggable] {
   cursor: move;
-}
-.widgets-ydheader .h-70{
-    height: 70px;
-}
-.widgets-ydheader .header-content{
-    line-height: 70px;
-    color: #000;
-    -webkit-box-shadow: 0 0 10px #000;
-            box-shadow: 0 0 10px #000;
-    overflow: hidden;
-}
-.widgets-ydheader .header-content__logo{
-    float: left;
-}
-.widgets-ydheader .header-content__nav{
-    float: right;
-}
-.widgets-ydheader .header-content__nav li{
-    float:left;
 }
